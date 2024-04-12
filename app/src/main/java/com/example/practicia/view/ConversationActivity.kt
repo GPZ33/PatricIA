@@ -26,17 +26,19 @@ import com.example.practicia.composant.Header
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
 import com.supdevinci.aieaie.viewmodel.OpenAiViewModel
 
 class ConversationActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
-        val openAiViewModel = OpenAiViewModel()
+        val openAiViewModel = OpenAiViewModel(applicationContext)
         super.onCreate(savedInstanceState)
         setContent {
             PracticIATheme {
                 Box(modifier = Modifier.fillMaxSize()) {
                     var messageToSend by remember { mutableStateOf("") }
                     val messages = remember { mutableStateListOf<String>() }
+                    var title by remember { mutableStateOf("") }
                     Column {
                         Header(appName = "PatricIA", logoResId = R.mipmap.logo_patricia_round, true)
                         Box(modifier = Modifier.weight(0.9f)){
@@ -48,7 +50,7 @@ class ConversationActivity : ComponentActivity() {
                                 onMessageChange = { messageToSend = it },
                                 onSendMessage = {
                                     if (messages.isEmpty()) {
-                                        openAiViewModel.createConversation(messageToSend)
+                                        title = messageToSend
                                     }
                                     messages.add("moi : $messageToSend")
                                     openAiViewModel.fetchMessages(messages) // Appel de fetchMessages avec le message de l'utilisateur
@@ -67,7 +69,7 @@ class ConversationActivity : ComponentActivity() {
                             }
                             messages.addAll(newMessages)
                         }
-
+                    SaveButton(title = title, messages = messages, viewModel = openAiViewModel)
                 }
             }
         }
@@ -111,4 +113,24 @@ fun SendMessage(
             })
         )
     }
+}
+
+@Composable
+fun SaveButton(
+    title: String,
+    messages: List<String>,
+    viewModel: OpenAiViewModel,
+    modifier: Modifier = Modifier
+) {
+    Button(
+        onClick = { saveConversation(title, messages, viewModel) },
+        modifier = modifier
+    ) {
+        Text("Save")
+    }
+}
+
+private fun saveConversation(title: String, messages: List<String>, viewModel: OpenAiViewModel) {
+    viewModel.createConversation(title, messages)
+    
 }

@@ -10,25 +10,19 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import com.example.practicia.ui.theme.PracticIATheme
 import android.content.Intent
-import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.ui.Alignment
 import com.example.practicia.R
 import com.example.practicia.composant.Header
-import com.example.practicia.database.PatriciaDatabase
-import com.supdevinci.aieaie.viewmodel.OpenAiViewModel
 
 class MainActivity : ComponentActivity() {
-    private val openAiViewModel = OpenAiViewModel()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -44,11 +38,11 @@ class MainActivity : ComponentActivity() {
                         Box(modifier = Modifier.weight(1f)) {
                             MyApp()
                         }
+                    }
                 }
             }
         }
     }
-}
 
 @Composable
 fun MyApp(
@@ -65,7 +59,6 @@ fun MyApp(
 
 @Composable
 fun Greeting(view: String, modifier: Modifier = Modifier) {
-    val context = LocalContext.current
     Surface(
         color = MaterialTheme.colorScheme.primary,
         modifier = modifier
@@ -83,27 +76,22 @@ fun Greeting(view: String, modifier: Modifier = Modifier) {
                             changePage(HistoryActivity::class.java)
                         }
                     }
-                    Toast
-                        .makeText(context, "Changement de page", Toast.LENGTH_SHORT)
-                        .show()
                 }
             )
     ) {
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(24.dp),
-            horizontalAlignment = Alignment.CenterHorizontally // Centrer le contenu horizontalement
-        ) {
-            Text(text = view)
+            Column(modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally // Centrer le contenu horizontalement
+            ) {
+                Text(text = view)
 
+            }
         }
     }
-}
-
     private fun changePage(activityClass: Class<*>) {
         val intent = Intent(this, activityClass)
         startActivity(intent)
     }
-
 }
 
